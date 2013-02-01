@@ -1,6 +1,6 @@
 {
-    "name": "aoyagikouhei/slim-fluentlogwriter",
-    "description": "slim fluentlogwriter",
+    "name": "aoyagikouhei/slim-fluent-logwriter",
+    "description": "slim fluent logwriter",
     "license": "MIT",
     "keywords": ["slim", "log"],
     "homepage": "https://github.com/aoyagikouhei/slim-fluent-logwriter",
