@@ -17,7 +17,7 @@ class FluentLogwriter
      * Constructor
      * @param  params(host, port, tag, tag_with_date) $params
      */
-    public function __construct($params)
+    public function __construct($params=array())
     {
         $this->params = array_merge(
             array(
@@ -30,14 +30,17 @@ class FluentLogwriter
         // postfix date (ex. 'Ym', 'Ymd', ...)
         if (isset($this->params['tag_with_date']))
         {
-            $ts = new DateTime();
+            $ts = new \DateTime();
             $this->params['tag'] = 
                 $this->params['tag'] . $ts->format($this->params['tag_with_date']);
         }
-        $this->logger = new Fluent\Logger\FluentLogger(
+        $this->logger = new \Fluent\Logger\FluentLogger(
             $this->params['host'], 
             $this->params['port']
         );
+        if (isset($this->params['error_handler'])) {
+            $this->logger->registerErrorHandler($this->params['error_handler']);
+        }
     }
 
     /**
