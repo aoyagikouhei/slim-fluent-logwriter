@@ -2,7 +2,7 @@
     "name": "aoyagikouhei/slim-fluent-logwriter",
     "description": "slim fluent logwriter",
     "license": "MIT",
-    "keywords": ["slim", "log"],
+    "keywords": ["slim", "log", "fluent"],
     "homepage": "https://github.com/aoyagikouhei/slim-fluent-logwriter",
     "require": {
         "slim/slim": "2.*",
