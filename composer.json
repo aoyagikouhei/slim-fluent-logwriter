@@ -1,0 +1,27 @@
+{
+    "name": "aoyagikouhei/slim-fluentlogwriter",
+    "description": "slim fluentlogwriter",
+    "license": "MIT",
+    "keywords": ["slim", "log"],
+    "homepage": "https://github.com/aoyagikouhei/slim-fluent-logwriter",
+    "require": {
+        "slim/slim": "2.*",
+        "fluent/logger": "0.3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "authors": [
+        {
+            "name": "aoyagikouhei",
+            "email": "aoyagi.kouhei@gmail.com",
+            "homepage": "http://aoyagikouhei.blog8.fc2.com/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Slim": "."
+        }
+    }
+}
