@@ -59,16 +59,23 @@ $app = new \Slim\Slim(array(
 ```
 
 First Fluent Settings is to mongodb log.
+
 Second Fluent Setting is to mail.
+
 You can add more Fluent settings.
 
 Options
 -------
 host : host name, default 'localhost'
+
 port : port, default '24224'
+
 tag : fluent tag name, default 'systemlog'
+
 level : write log level, default \Slim\Log::DEBUG
-tag_with_date : postfix date for tag default none
+
+tag_with_date : postfix date for tag by DateTime format, default none
+
 error_handler : when call error, default stderr
 
 
