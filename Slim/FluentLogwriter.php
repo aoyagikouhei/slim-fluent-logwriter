@@ -4,59 +4,108 @@ namespace Slim;
 class FluentLogwriter
 {
     /**
-     * @var logger
+     * @var loggerAry
      */
-    protected $logger;
+    protected $loggerAry;
 
     /**
-     * @var params
+     * @var paramsAry
+     *    host : host name (localhost)
+     *    port : port (24224)
+     *    tag : tag (systemlog)
+     *    tag_with_date : postfix tag date format
+     *    error_handler : error handler
+     *    level : level
      */
-    protected $params;
+    protected $paramsAry;
 
     /**
      * Constructor
-     * @param  params(host, port, tag, tag_with_date) $params
+     * @param  params $params
      */
-    public function __construct($params=array())
+    public function __construct($params=null)
     {
-        $this->params = array_merge(
+        $this->loggerAry = array();
+        $this->paramsAry = array();
+        if (!is_null($params))
+        {
+            $this->addFluent($params);
+        }
+    }
+    
+    /**
+     * add Fluent params
+     * @params params
+     */
+    public function addFluent($params=array())
+    {
+        $params = array_merge(
             array(
                 'host' => 'localhost',
                 'port' => '24224',
                 'tag' => 'systemlog',
+                'level' => \Slim\Log::DEBUG
             ), 
             $params
         );
-        // postfix date (ex. 'Ym', 'Ymd', ...)
-        if (isset($this->params['tag_with_date']))
+        
+        if (isset($params['tag_with_date']))
         {
             $ts = new \DateTime();
-            $this->params['tag'] = 
-                $this->params['tag'] . $ts->format($this->params['tag_with_date']);
+            $params['tag'] = 
+                $params['tag'] . $ts->format($params['tag_with_date']);
         }
-        $this->logger = new \Fluent\Logger\FluentLogger(
-            $this->params['host'], 
-            $this->params['port']
+        
+        $logger = new \Fluent\Logger\FluentLogger(
+            $params['host'], 
+            $params['port']
         );
-        if (isset($this->params['error_handler'])) {
-            $this->logger->registerErrorHandler($this->params['error_handler']);
+        if (isset($params['error_handler'])) {
+            $logger->registerErrorHandler($params['error_handler']);
         }
+        $this->loggerAry[] = $logger;
+        $this->paramsAry[] = $params;
+    }
+    
+    /**
+     * Check Writable
+     * @param message message
+     * @param level level
+     * @param params params
+     * @return true/false
+     */
+    protected function isWrite($message, $level, $params)
+    {
+        $in = $level;
+        $check = $params['level'];
+        return
+            (is_null($in) && ($check === \Slim\Log::DEBUG)) || 
+            (!is_null($in) && ($in <= $check));
     }
 
     /**
      * Write message
      * @param  mixed     $message
      * @param  int       $level
-     * @return true|false
+     * @return true
      */
     public function write($message, $level = null)
     {
-        return $this->logger->post(
-            $this->params['tag'],
-            array(
-                'l' => $level,
-                'm' => $message
-            )
-        );
+        $count = count($this->loggerAry);
+        for ($i = 0; $i < $count; $i++)
+        {
+            if (!$this->isWrite($message, $level, $this->paramsAry[$i]))
+            {
+                continue;
+            }
+            $this->loggerAry[$i]->post(
+                $this->paramsAry[$i]['tag'],
+                array(
+                    'l' => $level,
+                    'm' => $message
+                )
+            );
+        }
+        return true;
     }
 }
