@@ -13,6 +13,19 @@ class FluentLogwriterTest extends PHPUnit_Framework_TestCase
         $logger->write('aaa', 1);
     }
 
+    public function testWriteOption()
+    {
+        $callable = function($logger, $entity, $error) {
+            $this->assertEquals('systemlog', $entity->getTag());
+            $data = $entity->getData();
+            $this->assertEquals('aaa', $data['m']);
+            $this->assertEquals(1, $data['l']);
+            $this->assertEquals('y', $data['x']);
+        };
+        $logger = new \Slim\FluentLogwriter(array('error_handler' => $callable, 'option' => array('x' => 'y')));
+        $logger->write('aaa', 1);
+    }
+
     public function testWriteDate()
     {
         $callable = function($logger, $entity, $error) {

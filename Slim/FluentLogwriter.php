@@ -16,6 +16,7 @@ class FluentLogwriter
      *    tag_with_date : postfix tag date format
      *    error_handler : error handler
      *    level : level
+     *    option : add fluent log params
      */
     protected $paramsAry;
 
@@ -44,7 +45,8 @@ class FluentLogwriter
                 'host' => 'localhost',
                 'port' => '24224',
                 'tag' => 'systemlog',
-                'level' => \Slim\Log::DEBUG
+                'level' => \Slim\Log::DEBUG,
+                'option' => array()
             ), 
             $params
         );
@@ -100,9 +102,12 @@ class FluentLogwriter
             }
             $this->loggerAry[$i]->post(
                 $this->paramsAry[$i]['tag'],
-                array(
-                    'l' => $level,
-                    'm' => $message
+                array_merge(
+                    $this->paramsAry[$i]['option'],
+                    array(
+                        'l' => $level,
+                        'm' => $message
+                    )
                 )
             );
         }
